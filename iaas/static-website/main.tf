@@ -20,8 +20,15 @@ data "aws_iam_policy_document" "allow_access_from_internet_to_docs" {
   }
 }
 
+resource "random_string" "random" {
+  length = 6
+  special = false
+  upper = false
+} 
+
 resource "aws_s3_bucket" "this" {
   bucket        = var.bucket_name
+  bucket_prefix = random_string.random.result
   force_destroy = true
   tags = {
     Name = var.bucket_name
