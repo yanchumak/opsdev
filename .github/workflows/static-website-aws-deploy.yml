@@ -24,4 +24,4 @@ jobs:
 
     - name: Sync S3 bucket
       run: |
-        aws s3 sync static-website s3://${{ secrets.S3_BUCKET_NAME }} --delete
+        aws s3 sync code/static-website s3://${{ secrets.S3_BUCKET_NAME }} --delete
