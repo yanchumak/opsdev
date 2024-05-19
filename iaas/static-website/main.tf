@@ -27,7 +27,7 @@ resource "random_string" "random" {
 } 
 
 resource "aws_s3_bucket" "this" {
-  bucket        = "var.bucket_name-${random_string.random.result}"
+  bucket        = "${var.bucket_name}-${random_string.random.result}"
   force_destroy = true
   tags = {
     Name = var.bucket_name
@@ -43,6 +43,7 @@ resource "aws_s3_bucket_website_configuration" "this" {
 }
 
 resource "aws_s3_bucket_policy" "allow_access_from_internet_to_docs" {
+  depends_on = [aws_s3_bucket_public_access_block.this, aws_s3_bucket_ownership_controls.this]
   bucket = aws_s3_bucket.this.id
   policy = data.aws_iam_policy_document.allow_access_from_internet_to_docs.json
 }
@@ -61,4 +62,4 @@ resource "aws_s3_bucket_public_access_block" "this" {
   block_public_policy     = false
   ignore_public_acls      = false
   restrict_public_buckets = false
-}
+} 

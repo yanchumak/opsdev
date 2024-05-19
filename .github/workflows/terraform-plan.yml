@@ -3,9 +3,9 @@ name: "Terraform Plan"
 on:
   push:
     branches:
-    - develop
-    #paths:
-    #- 'iaas/static-website/**'
+      - develop
+    paths:
+      - 'iaas/static-website/**'
 
 env:
   TF_CLOUD_ORGANIZATION: "home-sandbox"
