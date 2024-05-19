@@ -37,7 +37,7 @@ jobs:
         with:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
-          plan_only: false
+          plan_only: true
           message: "Triggered From GitHub Actions CI ${{ github.sha }}"
 
       - name: Get Plan Output
