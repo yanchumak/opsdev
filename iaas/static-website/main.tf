@@ -1,50 +1,54 @@
+data "aws_iam_policy_document" "allow_access_from_internet_to_docs" {
+  statement {
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
 
-provider "aws" {
-    region = var.region
+    actions = [
+      "s3:GetObject"
+    ]
+
+    resources = [
+      aws_s3_bucket.this.arn,
+      "${aws_s3_bucket.this.arn}/*"
+    ]
+  }
 }
 
-resource "random_string" "random" {
-  length = 6
-  special = false
-  upper = false
-} 
-
-resource "aws_s3_bucket" "bucket" {
-  bucket = "website-${random_string.random.result}"
+resource "aws_s3_bucket" "this" {
+  bucket        = var.bucket_name
   force_destroy = true
+  tags = {
+    Name = var.bucket_name
+  }
 }
-resource "aws_s3_bucket_website_configuration" "website" {
-  bucket = aws_s3_bucket.bucket.id
+
+resource "aws_s3_bucket_website_configuration" "this" {
+  bucket = aws_s3_bucket.this.bucket
+
   index_document {
     suffix = "index.html"
   }
-  error_document {
-    key = "error.html"
+}
+
+resource "aws_s3_bucket_policy" "allow_access_from_internet_to_docs" {
+  bucket = aws_s3_bucket.this.id
+  policy = data.aws_iam_policy_document.allow_access_from_internet_to_docs.json
+}
+
+resource "aws_s3_bucket_ownership_controls" "this" {
+  bucket = aws_s3_bucket.this.bucket
+  rule {
+    object_ownership = "BucketOwnerPreferred"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "public_access_block" {
-  bucket = aws_s3_bucket.bucket.id
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
+resource "aws_s3_bucket_public_access_block" "this" {
+  bucket = aws_s3_bucket.this.id
 
-resource "aws_s3_bucket_policy" "bucket_policy" {
-  bucket = aws_s3_bucket.bucket.id
-  policy = jsonencode(
-    {
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Sid" : "PublicReadGetObject",
-          "Effect" : "Allow",
-          "Principal" : "*",
-          "Action" : "s3:GetObject",
-          "Resource" : "arn:aws:s3:::${aws_s3_bucket.bucket.id}/*"
-        }
-      ]
-    }
-  )
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
