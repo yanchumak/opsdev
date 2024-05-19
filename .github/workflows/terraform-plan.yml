@@ -47,7 +47,7 @@ jobs:
           plan: ${{ steps.run.outputs.plan_id }}
     
       - id: terraform-cloud-check-run-status
-        if: ${{ steps.run.outputs.run_status != 'planned_and_finished'}}
+        if: ${{ steps.run.outputs.run_status != 'planned_and_finished' && steps.run.outputs.run_status != 'cost_estimated'}}
         run: |
           echo "Terraform Cloud Run Failed or Requires Further Attention"
           echo "Run Status: '${{ steps.run.outputs.run_status }}'"
