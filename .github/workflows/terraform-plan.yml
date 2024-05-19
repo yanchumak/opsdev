@@ -45,6 +45,14 @@ jobs:
         id: plan-output
         with:
           plan: ${{ steps.run.outputs.plan_id }}
+
+      - uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.0
+        id: apply
+        if: ${{ fromJSON(steps.run.outputs.payload).data.attributes.actions.IsConfirmable }}
+        with:
+            run: ${{ steps.run.outputs.run_id }}
+            comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+    
       - id: terraform-cloud-check-run-status
         if: ${{ steps.run.outputs.run_status != 'planned_and_finished'}}
         run: |
