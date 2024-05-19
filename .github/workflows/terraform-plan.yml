@@ -12,6 +12,7 @@ env:
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
   TF_WORKSPACE: "opsdev"
   CONFIG_DIRECTORY: "iaas/static-website"
+  TF_LOG: DEBUG
 
 jobs:
   terraform:
