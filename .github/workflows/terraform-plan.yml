@@ -4,8 +4,8 @@ on:
   push:
     branches:
     - develop
-    paths:
-    - 'iaas/static-website/**'
+    #paths:
+    #- 'iaas/static-website/**'
 
 env:
   TF_CLOUD_ORGANIZATION: "home-sandbox"
