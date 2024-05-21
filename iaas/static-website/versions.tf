@@ -1,12 +1,6 @@
 terraform {
-  backend "remote" {
-    organization = "home-sandbox"
-
-    workspaces {
-      name = "opsdev"
-    }
-  }
-
+  required_version = "1.8.3"
+  
   required_providers {
     aws = {
       source  = "hashicorp/aws"
