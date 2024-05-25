@@ -26,6 +26,7 @@ jobs:
           pip install boto3
 
       - name: Zip Lambda function
+        working-directory: code/image-processing
         run: |
           zip -r rekognition_function.zip rekognition_function.py
 

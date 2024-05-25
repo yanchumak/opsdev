@@ -9,7 +9,6 @@ def lambda_handler(event, context):
     object_key = event['Records'][0]['s3']['object']['key']
     result_bucket = 'homesandbox-text-detection-results-dev'  #TODO change using SSM
 
-    # Detect text in the image
     response = rekognition.detect_text(
         Image={
             'S3Object': {
