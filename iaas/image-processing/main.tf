@@ -49,7 +49,7 @@ module "rekognition_function" {
 
   function_name = "rekognition_function"
   description   = "My lambda function code is deployed separately"
-  handler       = "index.lambda_handler"
+  handler       = "lambda_handler"
   runtime       = "python3.8"
 
   create_package          = false
