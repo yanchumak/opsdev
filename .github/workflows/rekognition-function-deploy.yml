@@ -38,6 +38,7 @@ jobs:
           aws-region:  ${{ secrets.AWS_REGION }}
 
       - name: Deploy Lambda function
+        working-directory: code/image-processing
         run: |
           aws lambda update-function-code \
             --function-name rekognition_function \
