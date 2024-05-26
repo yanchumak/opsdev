@@ -38,7 +38,7 @@ module "text_detection_results_s3_bucket" {
 }
 
 data "archive_file" "dummy_function_zip" {
-  type = "zip"
+  type        = "zip"
   source_file = "dummy_function.py"
   output_path = "dummy_function.zip"
 }
@@ -51,10 +51,36 @@ module "rekognition_function" {
   description   = "My lambda function code is deployed separately"
   handler       = "rekognition_function.lambda_handler"
   runtime       = "python3.8"
+  timeout       = 10
+
+  attach_policy_statements = true
+  policy_statements = {
+    s3_read = {
+      effect    = "Allow",
+      actions   = ["rekognition:DetectText"],
+      resources = ["*"]
+    },
+    region = {
+      effect = "Allow",
+      actions = [
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      resources = [
+        "${module.upload_image_s3_bucket.s3_bucket_arn}/*",
+        "${module.text_detection_results_s3_bucket.s3_bucket_arn}/*"
+      ]
+    }
+  }
 
   create_package          = false
   ignore_source_code_hash = true
-  local_existing_package = data.archive_file.dummy_function_zip.output_path
+  local_existing_package  = data.archive_file.dummy_function_zip.output_path
+
+  tags = {
+    Terraform   = "true"
+    Environment = "${var.env}"
+  }
 }
 
 

@@ -30,7 +30,7 @@ def lambda_handler(event, context):
         Key=f"results/{object_key}.json",
         Body=json.dumps(result_data)
     )
-
+    print(f"event: ${event}")
     return {
         'statusCode': 200,
         'body': json.dumps('Text detection complete!')
