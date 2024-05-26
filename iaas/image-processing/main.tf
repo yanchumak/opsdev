@@ -53,6 +53,10 @@ module "rekognition_function" {
   runtime       = "python3.8"
   timeout       = 10
 
+  environment_variables = {
+    TEXT_DETECTION_RESULTS_BUCKET = "${module.text_detection_results_s3_bucket.s3_bucket_id}"
+  }
+
   attach_policy_statements = true
   policy_statements = {
     s3_read = {

@@ -1,5 +1,6 @@
 import json
 import boto3
+import os
 
 def lambda_handler(event, context):
     rekognition = boto3.client('rekognition')
@@ -7,7 +8,7 @@ def lambda_handler(event, context):
 
     bucket_name = event['Records'][0]['s3']['bucket']['name']
     object_key = event['Records'][0]['s3']['object']['key']
-    result_bucket = 'homesandbox-text-detection-results-dev'  #TODO change using SSM
+    result_bucket = os.getenv('TEXT_DETECTION_RESULTS_BUCKET')
 
     # Detect text in the image
     response = rekognition.detect_text(
