@@ -11,6 +11,7 @@ module "upload_image_s3_bucket" {
 
   control_object_ownership = true
   object_ownership         = "ObjectWriter"
+  force_destroy            = true
 
   versioning = {
     enabled = false
@@ -31,6 +32,8 @@ module "text_detection_results_s3_bucket" {
 
   control_object_ownership = true
   object_ownership         = "ObjectWriter"
+  force_destroy            = true
+
 
   versioning = {
     enabled = false
@@ -95,6 +98,7 @@ resource "aws_lambda_permission" "allow_s3_invoke" {
   principal     = "s3.amazonaws.com"
 
   source_arn = module.upload_image_s3_bucket.s3_bucket_arn
+  depends_on = [module.rekognition_function, module.upload_image_s3_bucket]
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
@@ -104,4 +108,5 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     lambda_function_arn = module.rekognition_function.lambda_function_arn
     events              = ["s3:ObjectCreated:*"]
   }
+  depends_on = [module.rekognition_function, module.upload_image_s3_bucket]
 }
